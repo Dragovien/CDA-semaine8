@@ -1,6 +1,7 @@
 ### Create conference
 POST http://localhost:8000/conference
 Content-Type: application/json
+Authorization: Basic am9obmRvZUBnbWFpbC5jb206cXdlcnR5
 
 {
   "title": "Discover Nest.js",
