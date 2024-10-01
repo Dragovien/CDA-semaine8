@@ -5,6 +5,7 @@ import { RandomIDGenerator } from "../../../adapters/random-id-generator";
 import { OrganizeConference } from "../../../usecases/organize-conference";
 import { User } from "../../../entities/user.entity";
 import { createConferenceInput } from "../dto/conference.dto";
+import { ValidatorRequest } from "../utils/validate-request";
 
 const idGenerator = new RandomIDGenerator()
 const currentDateGenerator = new CurrentDateGenerator()
@@ -15,13 +16,20 @@ const usecase = new OrganizeConference(
 
 export const organizeConference = async (req: Request, res: Response, next: NextFunction)=> {
     try {
-      const {title, seats, startDate, endDate} = req.body as createConferenceInput
+      const body = req.body as createConferenceInput
+
+      const {errors, input} = await ValidatorRequest(createConferenceInput, body)
+
+      if(errors) {       
+        return res.status(400).json(errors)
+      }
+
       const result = await usecase.execute({
         user: new User({id: 'john-doe'}),
-        title,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        seats
+        title: input.title,
+        startDate: new Date(input.startDate),
+        endDate: new Date(input.endDate),
+        seats: input.seats
       })
 
       return res.status(201).json(result)
