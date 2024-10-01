@@ -1,9 +1,9 @@
-import { FixedDateGenerator } from "../adapters/fixed-date-generator"
-import { FixedIdGenerator } from "../adapters/fixed-id-generator"
-import { InMemoryConferenceRepository } from "../adapters/in-memory-conference-repository"
+import { FixedDateGenerator } from "../../core/adapters/fixed-date-generator"
+import { FixedIdGenerator } from "../../core/adapters/fixed-id-generator"
 import { Conference } from "../entities/conference.entity"
-import { User } from "../entities/user.entity"
+import { User } from "../../user/entities/user.entity"
 import { OrganizeConference } from "./organize-conference"
+import { InMemoryConferenceRepository } from "../adapters/in-memory-conference-repository"
 
 describe("Feature: organize conference", () => {
   function expectConferenceToEqual(conference: Conference) {

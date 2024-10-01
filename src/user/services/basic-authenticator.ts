@@ -2,6 +2,7 @@ import { User } from "../entities/user.entity";
 import { IAuthenticator } from "../ports/authenticator.interface";
 import { IUserRepository } from "../ports/user-repository.interface";
 
+
 export class BasicAuthenticator implements IAuthenticator{
   constructor(private readonly userRepository: IUserRepository){}
 

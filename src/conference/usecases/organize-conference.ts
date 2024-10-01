@@ -1,8 +1,8 @@
 import { Conference } from "../entities/conference.entity";
-import { User } from "../entities/user.entity";
+import { User } from "../../user/entities/user.entity";
+import { IDateGenerator } from "../../core/ports/date-generator.interface";
+import { IIDGenerator } from "../../core/ports/id-generator.interface";
 import { IConferenceRepository } from "../ports/conference-repository.interface";
-import { IDateGenerator } from "../ports/date-generator.interface";
-import { IIDGenerator } from "../ports/id-generator.interface";
 
 export class OrganizeConference {
   constructor(

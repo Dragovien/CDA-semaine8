@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import { InMemoryUserRepository } from "../../../ports/in-memeory-user-repository"
-import { BasicAuthenticator } from "../../../services/basic-authenticator"
+import { InMemoryUserRepository } from "../../../user/adapters/in-memeory-user-repository"
+import { BasicAuthenticator } from "../../../user/services/basic-authenticator"
 import { extractToken } from "../utils/extract-token"
 
 const userRepository = new InMemoryUserRepository()
