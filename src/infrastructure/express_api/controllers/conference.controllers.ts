@@ -21,7 +21,7 @@ export const organizeConference = async (req: Request, res: Response, next: Next
       const {errors, input} = await ValidatorRequest(createConferenceInput, body)
 
       if(errors) {       
-        return res.status(400).json(errors)
+        return res.jsonError(errors, 400)
       }
 
       const result = await usecase.execute({
@@ -32,7 +32,7 @@ export const organizeConference = async (req: Request, res: Response, next: Next
         seats: input.seats
       })
 
-      return res.status(201).json(result)
+      return res.jsonSuccess(result, 201)
     } catch (error) {
       next(error);
     }
