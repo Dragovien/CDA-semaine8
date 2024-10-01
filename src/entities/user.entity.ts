@@ -1,5 +1,7 @@
 type userProps = {
-  id: string
+  id: string,
+  emailAddress: string,
+  password: string
 }
 
 export class User {
