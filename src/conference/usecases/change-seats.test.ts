@@ -1,55 +1,34 @@
-import { addDays, addHours } from "date-fns"
-import { User } from "../../user/entities/user.entity"
-import { Conference } from "../entities/conference.entity"
+
 import { ChangeSeats } from "./change-seats"
 import { InMemoryConferenceRepository } from "../adapters/in-memory-conference-repository"
+import { testConference } from "../tests/conference-seeds"
+import { testUser } from "../../user/tests/user-seeds"
 
 describe("Feature: changing the number of seats", () => {
 
   async function expectSeatsUnchanged() {
-    const fetchedConference = await repository.findById(conference.props.id)
+    const fetchedConference = await repository.findById(testConference.conference1.props.id)
     expect(fetchedConference?.props.seats).toEqual(50)
   }
-
-  const johnDoe = new User({
-    id: 'john-doe',
-    emailAddress: 'johndoe@gmail.com',
-    password: 'qwerty'
-  })
-
-  const bob = new User({
-    id: 'bob',
-    emailAddress: 'bob@gmail.com',
-    password: 'qwerty'
-  })
-
-  const conference = new Conference({
-    id: 'id-1',
-    organizerId: johnDoe.props.id,
-    title: "My first conference",
-    seats: 50,
-    startDate: addDays(new Date(), 4),
-    endDate: addDays(addHours(new Date(), 2), 4),
-  })
 
   let repository: InMemoryConferenceRepository
   let useCase: ChangeSeats
 
   beforeEach(async () => {
     repository = new InMemoryConferenceRepository
-    await repository.create(conference)
+    await repository.create(testConference.conference1)
     useCase = new ChangeSeats(repository)
   })
 
   describe('Scenario: Happy Path', () => {
     it('should change the number of seats', async () => {
       await useCase.execute({
-        user: johnDoe,
-        conferenceId: conference.props.id,
+        user: testUser.johnDoe,
+        conferenceId: testConference.conference1.props.id,
         seats: 100
       })
 
-      const fetchedConference = await repository.findById(conference.props.id)
+      const fetchedConference = await repository.findById(testConference.conference1.props.id)
 
       expect(fetchedConference!.props.seats).toEqual(100)
     })
@@ -59,7 +38,7 @@ describe("Feature: changing the number of seats", () => {
     it('should fail', async () => {
 
       await expect(useCase.execute({
-        user: johnDoe,
+        user: testUser.johnDoe,
         conferenceId: 'non-existing-id',
         seats: 100
       })).rejects.toThrow('Conference not found')
@@ -72,8 +51,8 @@ describe("Feature: changing the number of seats", () => {
     it('should fail', async () => {
 
       await expect(useCase.execute({
-        user: bob,
-        conferenceId: conference.props.id,
+        user: testUser.bob,
+        conferenceId: testConference.conference1.props.id,
         seats: 100
       })).rejects.toThrow('You are not allowed to update this conference')
 
@@ -85,8 +64,8 @@ describe("Feature: changing the number of seats", () => {
     it('should fail', async () => {
 
       await expect(useCase.execute({
-        user: johnDoe,
-        conferenceId: conference.props.id,
+        user: testUser.johnDoe,
+        conferenceId: testConference.conference1.props.id,
         seats: 1001
       })).rejects.toThrow('The conference must have a maximum of 1000 seats and minimum of 20 seats')
 
@@ -98,8 +77,8 @@ describe("Feature: changing the number of seats", () => {
     it('should fail', async () => {
 
       await expect(useCase.execute({
-        user: johnDoe,
-        conferenceId: conference.props.id,
+        user: testUser.johnDoe,
+        conferenceId: testConference.conference1.props.id,
         seats: 19
       })).rejects.toThrow('The conference must have a maximum of 1000 seats and minimum of 20 seats')
 

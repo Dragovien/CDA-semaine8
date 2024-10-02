@@ -1,7 +1,5 @@
 import { addDays, addHours } from 'date-fns'
 import request from 'supertest'
-import { User } from '../user/entities/user.entity'
-import { InMemoryUserRepository } from '../user/adapters/in-memeory-user-repository'
 import container from '../infrastructure/express_api/config/dependency-injection'
 import { IConferenceRepository } from '../conference/ports/conference-repository.interface'
 import { TestApp } from './utils/test-app'
