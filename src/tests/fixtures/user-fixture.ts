@@ -1,7 +1,7 @@
 import { AwilixContainer } from "awilix";
 import { User } from "../../user/entities/user.entity";
 import { IUserRepository } from "../../user/ports/user-repository.interface";
-import { IFixture } from "./fixture.interface";
+import { IFixture } from "../utils/fixture.interface";
 
 export class UserFixture implements IFixture {
   constructor(public entity: User) {}
