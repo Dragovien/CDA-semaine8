@@ -16,8 +16,11 @@ describe("Feature: Organize conference", () => {
     await testApp.setup()
     await testApp.loadAllFixtures([e2eUsers.johnDoe])
     app = testApp.expressApp
-
-    })
+  })
+  
+  afterAll(async () => {
+    await testApp.teardown()
+  })
 
   it('should organize a conference', async () => {
     const startDate = addDays(new Date(), 4)

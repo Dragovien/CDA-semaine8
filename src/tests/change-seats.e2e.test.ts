@@ -16,7 +16,10 @@ describe("Feature: Change conference seats", () => {
     await testApp.setup()
     await testApp.loadAllFixtures([e2eUsers.johnDoe, testConference.conference1])
     app = testApp.expressApp
+  })
 
+  afterAll(async () => {
+    await testApp.teardown()
   })
 
   describe("Feature: Happy Path", () => {
