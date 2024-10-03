@@ -25,3 +25,14 @@ export class changeConferenceSeatsInput {
   seats: number
 
 }
+
+export class changeConferenceDatesInput {
+
+  @IsDateString()
+  @IsNotEmpty()
+  startDate: Date
+
+  @IsDateString()
+  @IsNotEmpty()
+  endDate: Date
+}

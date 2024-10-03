@@ -11,6 +11,11 @@ import { IConferenceRepository } from "../../../conference/ports/conference-repo
 import { ChangeSeats } from "../../../conference/usecases/change-seats";
 import { MongoUserRepository } from "../../../user/adapters/mongo/mongo-user-repository";
 import { MongoUser } from "../../../user/adapters/mongo/mongo-user";
+import { ChangeDates } from "../../../conference/usecases/change-dates";
+import { InMemoryBookingRepository } from "../../../conference/adapters/in-memory-booking-repository";
+import { InMemoryMailer } from "../../../core/adapters/in-memory-mailer";
+import { IBookingRepository } from "../../../conference/ports/booking-repository.interface";
+import { IMailer } from "../../../core/ports/mailer.interface";
 
 const container = createContainer()
 
@@ -18,18 +23,23 @@ container.register({
   conferenceRepository: asClass(InMemoryConferenceRepository).singleton(),
   idGenerator: asClass(RandomIDGenerator).singleton(),
   dateGenerator: asClass(CurrentDateGenerator).singleton(),
-  userRepository: asValue(new MongoUserRepository(MongoUser.UserModel))
+  userRepository: asValue(new MongoUserRepository(MongoUser.UserModel)),
+  bookingRepository: asClass(InMemoryBookingRepository).singleton(),
+  mailer: asClass(InMemoryMailer).singleton(),
 })
 
 const conferenceRepository = container.resolve('conferenceRepository') as IConferenceRepository
 const idGenerator = container.resolve('idGenerator') as IIDGenerator
 const dateGenerator = container.resolve('dateGenerator') as IDateGenerator
 const userRepository = container.resolve('userRepository') as IUserRepository
+const bookingRepository = container.resolve('bookingRepository') as IBookingRepository
+const mailer = container.resolve('mailer') as IMailer
 
 container.register({
   organizeConference: asValue(new OrganizeConference(conferenceRepository, idGenerator, dateGenerator)),
   changeSeats: asValue(new ChangeSeats(conferenceRepository)),
   authenticator: asValue(new BasicAuthenticator(userRepository)),
+  changeDates: asValue(new ChangeDates(conferenceRepository, dateGenerator, bookingRepository, mailer, userRepository)),
 })
 
 export default container
