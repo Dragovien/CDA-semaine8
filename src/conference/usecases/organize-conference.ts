@@ -37,7 +37,7 @@ export class OrganizeConference implements Executable<OrganizeRequest, OrganizeR
     })
 
     if(newConference.isTooClose(this.dateGenerator.now())) {
-      throw new Error("The conference must happen at least 3 days after its creation")
+      throw new Error("The conference must happen in at least 3 days")
     }
 
     if(newConference.hasTooManySeats()) {
@@ -49,7 +49,7 @@ export class OrganizeConference implements Executable<OrganizeRequest, OrganizeR
     }
 
     if(newConference.isTooLong()) {
-      throw new Error("The conference must be less than 3h")
+      throw new Error("The conference is too long (>3h)")
     }
 
 

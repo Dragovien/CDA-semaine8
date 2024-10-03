@@ -69,7 +69,7 @@ describe("Feature: organize conference", () => {
     }
 
     it('should throw an error', async () => {
-      await expect(() => useCase.execute(payload)).rejects.toThrow("The conference must happen at least 3 days after its creation")
+      await expect(() => useCase.execute(payload)).rejects.toThrow("The conference must happen in at least 3 days")
     })
 
     it('should not create a conference', async () => {
@@ -141,7 +141,7 @@ describe("Feature: organize conference", () => {
     }
 
     it('should throw an error', async () => {
-      await expect(() => useCase.execute(payload)).rejects.toThrow("The conference must be less than 3h")
+      await expect(() => useCase.execute(payload)).rejects.toThrow("The conference is too long (>3h)")
     })
 
     it('should not create a conference', async () => {
