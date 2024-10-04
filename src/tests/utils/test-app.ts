@@ -19,6 +19,7 @@ export class TestApp {
   async setup() {
     await mongoose.connect('mongodb://admin:qwerty@localhost:3702/conferences?authSource=admin')
     await mongoose.connection.db?.collection('users').deleteMany({})
+    await mongoose.connection.db?.collection('conferences').deleteMany({})
     
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))

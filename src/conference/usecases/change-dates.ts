@@ -5,9 +5,12 @@ import { User } from "../../user/entities/user.entity"
 import { IUserRepository } from "../../user/ports/user-repository.interface"
 import { testUsers } from "../../user/tests/user-seeds"
 import { Conference } from "../entities/conference.entity"
+import { ConferenceNotFoundException } from "../exceptions/conference-not-found"
+import { ConferenceTooLongException } from "../exceptions/conference-too-long"
+import { ConferenceUpdateForbiddenException } from "../exceptions/conference-update-forbidden"
 import { IBookingRepository } from "../ports/booking-repository.interface"
 import { IConferenceRepository } from "../ports/conference-repository.interface"
-import { testConference } from "../tests/conference-seeds"
+import { testConferences } from "../tests/conference-seeds"
 
 
 type RequestChangeDates = {
@@ -33,9 +36,9 @@ export class ChangeDates implements Executable<RequestChangeDates, ResponseChang
   async execute({ user, conferenceId, startDate, endDate }: RequestChangeDates) {
     const conference = await this.repository.findById(conferenceId)
 
-    if (!conference) throw new Error("Conference not found")
+    if (!conference) throw new ConferenceNotFoundException()
 
-    if (conference.props.organizerId !== user.props.id) throw new Error("You are not allowed to update this conference")
+    if (conference.props.organizerId !== user.props.id) throw new ConferenceUpdateForbiddenException()
 
     conference.update({
       startDate,
@@ -47,7 +50,7 @@ export class ChangeDates implements Executable<RequestChangeDates, ResponseChang
     }
 
     if (conference.isTooLong()) {
-      throw new Error("The conference is too long (> 3 hours)")
+      throw new ConferenceTooLongException()
     }
 
     await this.repository.update(conference)
@@ -69,8 +72,8 @@ export class ChangeDates implements Executable<RequestChangeDates, ResponseChang
         this.mailer.send({
           from: 'TEDx conference',
           to: user.props.emailAddress,
-          subject: `The dates of the conference: ${testConference.conference1.props.title} have changed`,
-          body: `The dates of the conference: ${testConference.conference1.props.title} have changed`
+          subject: `The dates of the conference: ${testConferences.conference1.props.title} have changed`,
+          body: `The dates of the conference: ${testConferences.conference1.props.title} have changed`
         })
       })
     )

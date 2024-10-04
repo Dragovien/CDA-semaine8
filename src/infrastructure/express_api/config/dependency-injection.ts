@@ -1,5 +1,4 @@
 import { asClass, asValue, createContainer } from "awilix";
-import { InMemoryConferenceRepository } from "../../../conference/adapters/in-memory-conference-repository";
 import { RandomIDGenerator } from "../../../core/adapters/random-id-generator";
 import { CurrentDateGenerator } from "../../../core/adapters/current-date-generator";
 import { OrganizeConference } from "../../../conference/usecases/organize-conference";
@@ -16,11 +15,14 @@ import { InMemoryBookingRepository } from "../../../conference/adapters/in-memor
 import { InMemoryMailer } from "../../../core/adapters/in-memory-mailer";
 import { IBookingRepository } from "../../../conference/ports/booking-repository.interface";
 import { IMailer } from "../../../core/ports/mailer.interface";
+import { MongoConferenceRepository } from "../../../conference/adapters/mongo/mongo-conference-repository";
+import { MongoConference } from "../../../conference/adapters/mongo/mongo-conference";
+import { BookConferencePlace } from "../../../conference/usecases/book-place";
 
 const container = createContainer()
 
 container.register({
-  conferenceRepository: asClass(InMemoryConferenceRepository).singleton(),
+  conferenceRepository: asValue(new MongoConferenceRepository(MongoConference.ConferenceModel)),
   idGenerator: asClass(RandomIDGenerator).singleton(),
   dateGenerator: asClass(CurrentDateGenerator).singleton(),
   userRepository: asValue(new MongoUserRepository(MongoUser.UserModel)),
@@ -40,6 +42,7 @@ container.register({
   changeSeats: asValue(new ChangeSeats(conferenceRepository)),
   authenticator: asValue(new BasicAuthenticator(userRepository)),
   changeDates: asValue(new ChangeDates(conferenceRepository, dateGenerator, bookingRepository, mailer, userRepository)),
+  bookConference: asValue(new BookConferencePlace(bookingRepository, conferenceRepository, mailer, userRepository))
 })
 
 export default container

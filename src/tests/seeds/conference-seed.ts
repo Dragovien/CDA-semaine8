@@ -14,5 +14,16 @@ export const e2eConference = {
       endDate: addDays(addHours(new Date(), 2), 4),
   
     })
+  ),
+  conference2: new ConferenceFixture(
+    new Conference({
+      id: "id-2",
+      organizerId: testUsers.bob.props.id,
+      title: "Bob's conference",
+      seats: 50,
+      startDate: addDays(new Date(), 4),
+      endDate: addDays(addHours(new Date(), 2), 4),
+  
+    })
   )
 }

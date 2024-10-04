@@ -42,8 +42,8 @@ describe("Feature: Change conference dates", () => {
       const fetchedConference = await conferenceRepository.findById(id)
 
       expect(fetchedConference).toBeDefined()
-      expect(fetchedConference!.props.startDate).toEqual(startDate.toISOString())
-      expect(fetchedConference!.props.endDate).toEqual(endDate.toISOString())
+      expect(fetchedConference!.props.startDate).toEqual(startDate)
+      expect(fetchedConference!.props.endDate).toEqual(endDate)
     })
   })
 

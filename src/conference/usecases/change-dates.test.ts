@@ -2,7 +2,7 @@ import { addDays, addHours } from "date-fns";
 import { FixedDateGenerator } from "../../core/adapters/fixed-date-generator";
 import { testUsers } from "../../user/tests/user-seeds";
 import { InMemoryConferenceRepository } from "../adapters/in-memory-conference-repository";
-import { testConference } from "../tests/conference-seeds";
+import { testConferences } from "../tests/conference-seeds";
 import { ChangeDates } from "./change-dates";
 import { InMemoryBookingRepository } from "../adapters/in-memory-booking-repository";
 import { InMemoryMailer } from "../../core/adapters/in-memory-mailer";
@@ -12,9 +12,9 @@ import { testBooking } from "../tests/booking-seeds";
 
 describe('Feature: change the dates of conference', () => {
   async function expectDatesRemainUnchanged() {
-    const conference = await repository.findById(testConference.conference1.props.id)
-    expect(conference?.props.startDate).toEqual(testConference.conference1.props.startDate)
-    expect(conference?.props.endDate).toEqual(testConference.conference1.props.endDate)
+    const conference = await repository.findById(testConferences.conference1.props.id)
+    expect(conference?.props.startDate).toEqual(testConferences.conference1.props.startDate)
+    expect(conference?.props.endDate).toEqual(testConferences.conference1.props.endDate)
   }
 
   let useCase: ChangeDates;
@@ -26,7 +26,7 @@ describe('Feature: change the dates of conference', () => {
 
   beforeEach(async () => {
     repository = new InMemoryConferenceRepository()
-    await repository.create(testConference.conference1)
+    await repository.create(testConferences.conference1)
 
     dateGenerator = new FixedDateGenerator()
     bookingRepository = new InMemoryBookingRepository()
@@ -53,7 +53,7 @@ describe('Feature: change the dates of conference', () => {
 
     const payload = {
       user: testUsers.johnDoe,
-      conferenceId: testConference.conference1.props.id,
+      conferenceId: testConferences.conference1.props.id,
       startDate,
       endDate
     }
@@ -61,7 +61,7 @@ describe('Feature: change the dates of conference', () => {
     it('should change the dates', async () => {
       await useCase.execute(payload)
 
-      const fetchedConference = await repository.findById(testConference.conference1.props.id)
+      const fetchedConference = await repository.findById(testConferences.conference1.props.id)
 
       expect(fetchedConference?.props.startDate).toEqual(startDate)
       expect(fetchedConference?.props.endDate).toEqual(endDate)
@@ -73,13 +73,13 @@ describe('Feature: change the dates of conference', () => {
       expect(mailer.sentEmails).toEqual([{
         from: 'TEDx conference',
         to: testUsers.bob.props.emailAddress,
-        subject: `The dates of the conference: ${testConference.conference1.props.title} have changed`,
-        body: `The dates of the conference: ${testConference.conference1.props.title} have changed`
+        subject: `The dates of the conference: ${testConferences.conference1.props.title} have changed`,
+        body: `The dates of the conference: ${testConferences.conference1.props.title} have changed`
       }, {
         from: 'TEDx conference',
         to: testUsers.alice.props.emailAddress,
-        subject: `The dates of the conference: ${testConference.conference1.props.title} have changed`,
-        body: `The dates of the conference: ${testConference.conference1.props.title} have changed`
+        subject: `The dates of the conference: ${testConferences.conference1.props.title} have changed`,
+        body: `The dates of the conference: ${testConferences.conference1.props.title} have changed`
       }])
     })
   })
@@ -109,7 +109,7 @@ describe('Feature: change the dates of conference', () => {
 
     const payload = {
       user: testUsers.bob,
-      conferenceId: testConference.conference1.props.id,
+      conferenceId: testConferences.conference1.props.id,
       startDate,
       endDate
     }
@@ -129,7 +129,7 @@ describe('Feature: change the dates of conference', () => {
 
     const payload = {
       user: testUsers.johnDoe,
-      conferenceId: testConference.conference1.props.id,
+      conferenceId: testConferences.conference1.props.id,
       startDate,
       endDate
     }
@@ -148,7 +148,7 @@ describe('Feature: change the dates of conference', () => {
 
     const payload = {
       user: testUsers.johnDoe,
-      conferenceId: testConference.conference1.props.id,
+      conferenceId: testConferences.conference1.props.id,
       startDate,
       endDate
     }
@@ -156,7 +156,7 @@ describe('Feature: change the dates of conference', () => {
     it('should fail', async () => {
       await expect(useCase.execute(payload))
         .rejects
-        .toThrow("The conference is too long (> 3 hours)")
+        .toThrow("The conference is too long (>3h)")
       await expectDatesRemainUnchanged()
     })
   })
