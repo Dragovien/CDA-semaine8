@@ -4,8 +4,9 @@ import { IConferenceRepository } from '../conference/ports/conference-repository
 import { TestApp } from './utils/test-app'
 import { Application } from 'express'
 import { e2eUsers } from './seeds/user-seeds'
-import { testConference } from './seeds/conference-seed'
 import { addDays, addHours } from 'date-fns'
+import { e2eBooking } from './seeds/booking-seeds'
+import { e2eConference } from './seeds/conference-seed'
 
 describe("Feature: Change conference dates", () => {
 
@@ -15,7 +16,7 @@ describe("Feature: Change conference dates", () => {
   beforeEach(async () => {
     testApp = new TestApp()
     await testApp.setup()
-    await testApp.loadAllFixtures([e2eUsers.johnDoe,e2eUsers.bob, e2eUsers.alice, testConference.conference1])
+    await testApp.loadAllFixtures([e2eUsers.johnDoe,e2eUsers.bob, e2eUsers.alice,e2eBooking.bobBooking, e2eBooking.aliceBooking, e2eConference.conference1])
     app = testApp.expressApp
   })
 
@@ -41,8 +42,8 @@ describe("Feature: Change conference dates", () => {
       const fetchedConference = await conferenceRepository.findById(id)
 
       expect(fetchedConference).toBeDefined()
-      expect(fetchedConference?.props.startDate).toEqual(startDate)
-      expect(fetchedConference?.props.endDate).toEqual(endDate)
+      expect(fetchedConference?.props.startDate).toEqual(startDate.toISOString())
+      expect(fetchedConference?.props.endDate).toEqual(endDate.toISOString())
     })
   })
 

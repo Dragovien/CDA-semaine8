@@ -3,7 +3,7 @@ import { testUsers } from "../../user/tests/user-seeds";
 import { ConferenceFixture } from "../../tests/fixtures/conference-fixture";
 import { Conference } from "../../conference/entities/conference.entity";
 
-export const testConference = {
+export const e2eConference = {
   conference1: new ConferenceFixture(
     new Conference({
       id: "id-1",

@@ -4,7 +4,7 @@ import { IConferenceRepository } from '../conference/ports/conference-repository
 import { TestApp } from './utils/test-app'
 import { Application } from 'express'
 import { e2eUsers } from './seeds/user-seeds'
-import { testConference } from './seeds/conference-seed'
+import { e2eConference } from './seeds/conference-seed'
 
 describe("Feature: Change conference seats", () => {
 
@@ -14,7 +14,7 @@ describe("Feature: Change conference seats", () => {
   beforeEach(async () => {
     testApp = new TestApp()
     await testApp.setup()
-    await testApp.loadAllFixtures([e2eUsers.johnDoe, testConference.conference1])
+    await testApp.loadAllFixtures([e2eUsers.johnDoe, e2eConference.conference1])
     app = testApp.expressApp
   })
 
