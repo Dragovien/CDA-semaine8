@@ -26,7 +26,7 @@ describe("Feature: Change conference seats", () => {
 
     it('should change conference seats', async () => {
       const seats = 100
-      const id = 'id-1'
+      const id = e2eConference.conference1.entity.props.id
 
       const result = await request(app)
         .patch(`/conference/seats/${id}`)
@@ -39,7 +39,7 @@ describe("Feature: Change conference seats", () => {
       const fetchedConference = await conferenceRepository.findById(id)
 
       expect(fetchedConference).toBeDefined()
-      expect(fetchedConference?.props.seats).toEqual(seats)
+      expect(fetchedConference!.props.seats).toEqual(seats)
     })
   })
 
@@ -47,7 +47,7 @@ describe("Feature: Change conference seats", () => {
 
     it('should return 403 Unauthorized', async () => {
       const seats = 100
-      const id = 'id-1'
+      const id = e2eConference.conference1.entity.props.id
 
       const result = await request(app)
         .patch(`/conference/seats/${id}`)

@@ -16,7 +16,7 @@ describe("Feature: Change conference dates", () => {
   beforeEach(async () => {
     testApp = new TestApp()
     await testApp.setup()
-    await testApp.loadAllFixtures([e2eUsers.johnDoe,e2eUsers.bob, e2eUsers.alice,e2eBooking.bobBooking, e2eBooking.aliceBooking, e2eConference.conference1])
+    await testApp.loadAllFixtures([e2eUsers.johnDoe, e2eUsers.bob, e2eUsers.alice, e2eBooking.bobBooking, e2eBooking.aliceBooking, e2eConference.conference1])
     app = testApp.expressApp
   })
 
@@ -29,21 +29,21 @@ describe("Feature: Change conference dates", () => {
     it('should change conference dates', async () => {
       const startDate = addDays(new Date(), 8)
       const endDate = addDays(addHours(new Date(), 2), 8)
-      const id = 'id-1'
+      const id = e2eConference.conference1.entity.props.id
 
       const result = await request(app)
         .patch(`/conference/dates/${id}`)
         .set('Authorization', e2eUsers.johnDoe.createAuthorizationToken())
         .send({ startDate: startDate.toISOString(), endDate: endDate.toISOString() })
-      
+
       expect(result.status).toBe(200)
 
       const conferenceRepository = container.resolve('conferenceRepository') as IConferenceRepository
       const fetchedConference = await conferenceRepository.findById(id)
 
       expect(fetchedConference).toBeDefined()
-      expect(fetchedConference?.props.startDate).toEqual(startDate.toISOString())
-      expect(fetchedConference?.props.endDate).toEqual(endDate.toISOString())
+      expect(fetchedConference!.props.startDate).toEqual(startDate.toISOString())
+      expect(fetchedConference!.props.endDate).toEqual(endDate.toISOString())
     })
   })
 
@@ -52,7 +52,7 @@ describe("Feature: Change conference dates", () => {
     it('should return 403 Unauthorized', async () => {
       const startDate = addDays(new Date(), 8)
       const endDate = addDays(addHours(new Date(), 2), 8)
-      const id = 'id-1'
+      const id = e2eConference.conference1.entity.props.id
 
       const result = await request(app)
         .patch(`/conference/dates/${id}`)
